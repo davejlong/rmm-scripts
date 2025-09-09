@@ -8,14 +8,15 @@ Overview of the description of the script
 # Set variables here that will be populated by the RMM or set when running manually
 ###
 
-$Params = @{
-  SomeVariable = "foo bar"
+$ScriptSettings = @{
+  UploadToSyncro = $true
 }
+
 $ScriptName = ([System.IO.FileInfo]$PSCommandPath).BaseName
 $OutFile = Join-Path $env:TEMP "$(Get-Date -Format FileDate)-$ScriptName.txt"
 
 Write-Host "Running $ScriptName with params:"
-Write-Host $Params
+Write-Host $ScriptSettings
 Write-Host "==========================="
 
 ###
@@ -29,7 +30,7 @@ Write-Host "==========================="
 ###
 # RMM Processing
 ###
-if ($env:SyncroModule) {
+if ($env:SyncroModule -and $ScriptSettings.UploadToSyncro) {
   Import-Module $env:SyncroModule
 
   Write-Host "Uploading to Syncro"
