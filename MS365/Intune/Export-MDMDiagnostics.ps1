@@ -17,9 +17,9 @@ $Settings = @{
 $ScriptName = ([System.IO.FileInfo]$PSCommandPath).BaseName
 $OutFile = Join-Path $env:TEMP "$(Get-Date -Format FileDate)-$ScriptName.zip"
 
-Write-Host "Running $ScriptName with params:"
-Write-Host $Settings
-Write-Host "==========================="
+Write-Output "Running $ScriptName with params:"
+Write-Output $Settings
+Write-Output "==========================="
 
 ###
 # Execution Logic
@@ -33,17 +33,17 @@ $ProcParams = @{
   Wait = $true
 }
 
-Write-Host "Gathering diagnostics..." -NoNewline
+Write-Output "Gathering diagnostics..." -NoNewline
 $Proc = Start-Process @ProcParams
 
 do {
   Start-Sleep -Seconds 1
-  Write-Host "." -NoNewline
+  Write-Output "." -NoNewline
 } while (!($Proc.HasExited))
 
-Write-Host "Done!"
+Write-Output "Done!"
 
-Write-Host "MDM Diagnostics report saved to $OutFile"
+Write-Output "MDM Diagnostics report saved to $OutFile"
 
 
 
@@ -53,7 +53,7 @@ Write-Host "MDM Diagnostics report saved to $OutFile"
 if ($env:SyncroModule -and $Settings.UploadToSyncro) {
   Import-Module $env:SyncroModule
 
-  Write-Host "Uploading to Syncro"
+  Write-Output "Uploading to Syncro"
 
   Upload-File -FilePath $OutFile
 }

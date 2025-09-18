@@ -22,9 +22,9 @@ $ScriptSettings = @{
 $ScriptName = ([System.IO.FileInfo]$PSCommandPath).BaseName
 $OutFile = Join-Path $env:TEMP "$(Get-Date -Format FileDate)-$ScriptName.txt"
 
-Write-Host "Running $ScriptName with params:"
-Write-Host $ScriptSettings
-Write-Host "==========================="
+Write-Output "Running $ScriptName with params:"
+Write-Output $ScriptSettings
+Write-Output "==========================="
 
 ###
 # Execution Logic
@@ -43,7 +43,7 @@ Start-Process -Wait -Passthru -FilePath cmd.exe -ArgumentList $Command
 if ($env:SyncroModule -and $ScriptSettings.UploadToSyncro) {
   Import-Module $env:SyncroModule
 
-  Write-Host "Uploading to Syncro"
+  Write-Output "Uploading to Syncro"
 
   Upload-File -FilePath $OutFile
 }

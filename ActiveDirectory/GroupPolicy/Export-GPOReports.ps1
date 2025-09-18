@@ -15,9 +15,9 @@ $ScriptName = ([System.IO.FileInfo]$PSCommandPath).BaseName
 $OutPath = Join-Path -Path $env:TEMP -ChildPath "$(Get-Date -Format FileDate)-GPOReports"
 $OutFile = Join-Path -Path $env:TEMP -ChildPath "$(Get-Date -Format FileDate)-GPOReports.zip"
 
-Write-Host "Running $ScriptName with params:"
-Write-Host (ConvertTo-Json -InputObject $Params)
-Write-Host "==========================="
+Write-Output "Running $ScriptName with params:"
+Write-Output (ConvertTo-Json -InputObject $Params)
+Write-Output "==========================="
 
 ###
 # Execution Logic
@@ -25,7 +25,7 @@ Write-Host "==========================="
 ###
 
 if (!(Get-Module -ListAvailable -Name GroupPolicy)) {
-  Write-Host "Group Policy module not available."
+  Write-Output "Group Policy module not available."
   return
 }
 
@@ -35,15 +35,15 @@ New-Item -Path $OutPath -ItemType Directory
 
 $GPOs = Get-GPO -All
 
-Write-Host "Exporting all GPOs"
+Write-Output "Exporting all GPOs"
 foreach ($GPO in $GPOs) {
   $Report = Join-Path -Path $OutPath -ChildPath "$($gpo.DisplayName).$($Params.ReportType)"
   Get-GpoReport -Guid $GPO.Id -ReportType $Params.ReportType -Path $Report
 }
 
-Write-Host "GPOs saved to $OutPath"
+Write-Output "GPOs saved to $OutPath"
 
-Write-Host "Creating zip file"
+Write-Output "Creating zip file"
 # Compress-Archive command wasn't available until Windows 2016...
 Add-Type -AssemblyName "system.io.compression.filesystem"
 [io.compression.zipfile]::CreateFromDirectory("$OutPath", "$OutFile")
@@ -54,6 +54,6 @@ Add-Type -AssemblyName "system.io.compression.filesystem"
 if ($env:SyncroModule) {
   Import-Module $env:SyncroModule
 
-  Write-Host "Uploading to Syncro"
+  Write-Output "Uploading to Syncro"
   Upload-File -FilePath $OutFile
 }

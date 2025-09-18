@@ -15,10 +15,10 @@ $ScriptSettings = @{
 $ScriptName = ([System.IO.FileInfo]$PSCommandPath).BaseName
 $OutFile = Join-Path $env:TEMP "$(Get-Date -Format FileDate)-$ScriptName.txt"
 
-Write-Host "Running $ScriptName with settings:"
-Write-Host $ScriptSettings
-Write-Host "Writing output to $OutFile"
-Write-Host "==========================="
+Write-Output "Running $ScriptName with settings:"
+Write-Output $ScriptSettings
+Write-Output "Writing output to $OutFile"
+Write-Output "==========================="
 
 ###
 # Execution Logic
@@ -73,7 +73,7 @@ $OneDriveAccountsSettings | Out-File -FilePath $OutFile -Append
 if ($env:SyncroModule -and $ScriptSettings.UploadToSyncro) {
   Import-Module $env:SyncroModule
 
-  Write-Host "Uploading to Syncro"
+  Write-Output "Uploading to Syncro"
 
   $StorageSenseSettings | Out-File -FilePath $OutFile
   $OneDriveAccountsSettings | Out-File -FilePath $OutFile -Append

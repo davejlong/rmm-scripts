@@ -1,6 +1,6 @@
 <#
 .DESCRIPTION
-Overview of the description of the script
+Adds a user to an AD group
 #>
 
 ###
@@ -9,7 +9,9 @@ Overview of the description of the script
 ###
 
 $ScriptSettings = @{
-  UploadToSyncro = $true
+  UploadToSyncro = $false
+  Username = "jsmith"
+  GroupName = "Finance"
 }
 
 $ScriptName = ([System.IO.FileInfo]$PSCommandPath).BaseName
@@ -24,8 +26,18 @@ Write-Output "==========================="
 # Put the logic for the script here.
 ###
 
+return
 
+$UserFilter = "SamAccountNAme -eq '$($ScriptSettings.Username)' -or UserPrincipalName -eq '$($ScriptSettings.Username)' -or Mail -eq '$($ScriptSettings.Username)'"
+$User = Get-ADUser -Filter $UserFilter
+$Group = Get-ADGRoup -Identity $GroupName
 
+if ($null -eq $User -or $null -eq $Group) {
+  Write-Output "Could not find user or group."
+  return
+}
+
+Add-ADGroupMember -Identity $Group.SamAccountName -Members $User.SamAccountName
 
 ###
 # RMM Processing
