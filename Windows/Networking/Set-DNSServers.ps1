@@ -1,6 +1,6 @@
 <#
 .DESCRIPTION
-Overview of the description of the script
+Updates the DNS servers for a network adapter
 #>
 
 ###
@@ -9,7 +9,10 @@ Overview of the description of the script
 ###
 
 $ScriptSettings = @{
-  UploadToSyncro = $true
+  UploadToSyncro = $false
+  DNSServer1 = "208.67.220.220"
+  DNSServer2 = "1.1.1.1"
+  NetAdapterName = ""
 }
 
 $ScriptName = ([System.IO.FileInfo]$PSCommandPath).BaseName
@@ -24,8 +27,22 @@ Write-Output "==========================="
 # Put the logic for the script here.
 ###
 
+$NetAdapter = $null
+if ($ScriptSettings.NetAdapterName -eq "") {
+  $DefaultRoute = Get-NetRoute -DestinationPrefix "0.0.0.0/0"
+  $NetAdapter = Get-NetAdapter -InterfaceIndex $DefaultRoute.ifIndex
+} else {
+  $NetAdapter = Get-NetAdapter -Name "$($ScriptSettings.NetAdapterName)"
+}
 
 
+$DNSServerList = @($ScriptSettings.DNSServer1, $ScriptSettings.DNSServer2)
+$DNSParams = @{
+  InterfaceIndex = $NetAdapter.ifIndex
+  ServerAddresses = $DNSServerList
+}
+
+Set-DnsClientServerAddress @DNSParams
 
 ###
 # RMM Processing
