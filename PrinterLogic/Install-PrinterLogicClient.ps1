@@ -104,6 +104,11 @@ function Install-PrinterLogicClient {
 
 
   # ----- MAIN SCRIPT STARTS HERE
+  
+  # Make sure HomeURL has the protocol prepended
+  if ($HomeURL -notlike "https://*") {
+    $HomeURL = "https://$HomeURL"
+  }
 
   Write-Output "Command called with the following parameters:"
   Write-Output "  HomeURL=$HomeURL"
