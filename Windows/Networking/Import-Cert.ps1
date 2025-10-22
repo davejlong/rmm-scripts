@@ -37,7 +37,7 @@ if ($Cert.Thumbprint -ne $ScriptSettings.Thumbprint) {
 }
 
 $CertStoreLocation = "Cert:"
-if ($ScriptSettings.InstallType = "Machine") {
+if ($ScriptSettings.InstallType -eq "Machine") {
   $CertStoreLocation += "\LocalMachine"
 } else {
   $CertStoreLocation += "\CurrentUser"

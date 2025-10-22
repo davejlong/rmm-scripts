@@ -2,10 +2,10 @@
 .DESCRIPTION
 Ensures DestinationUser has the same group memberships as SourceUser. Adds or removes DestinationUser to groups. Does not make any modifications to SourceUser.
 
-.PARAM SourceUsername
+.PARAMETER SourceUsername
 User that will be used as a template for group memberships.
 
-.PARAM DestUsername
+.PARAMETER DestUsername
 User that will be added or removed from groups.
 #>
 function Sync-ADUserGroupMemberships {
